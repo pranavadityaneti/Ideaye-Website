@@ -14,16 +14,21 @@ export interface ClientItem {
   imagePlaceholder?: string;
 }
 
-export interface PricingPackage {
-  title: string;
-  subtitle?: string;
-  price: string;
-  period: string;
-  features: string[];
-  isHighlight?: boolean;
-}
-
 export interface NavItem {
   label: string;
   href: string;
+}
+
+export interface Project {
+  id: string;
+  title: string;
+  subtitle: string;
+  category: string;
+  description: string;
+  brief: string;
+  overview: string;
+  approach: string;
+  execution: string;
+  highlights: string[];
+  images: string[]; // For demo, we'll use CSS classes or placeholders
 }
