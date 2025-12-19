@@ -1,38 +1,22 @@
 import React, { useState } from 'react';
 import { Logo } from './Logo';
-import { NAV_ITEMS, SERVICES, CLIENTS, PROJECTS } from '../constants';
+import { SERVICES, PROJECTS, CLIENTS } from '../constants';
+import { BrandMarquee } from './BrandMarquee';
 import { AiIdeaGenerator } from './AiIdeaGenerator';
-import { Menu, X, ArrowRight, CheckCircle2, Phone, Mail, Instagram, Linkedin, Facebook, Youtube, Award, Zap, FlaskConical, MousePointer2, ArrowUpRight } from 'lucide-react';
+import { FlipWords } from './FlipWords';
+import { Menu, X, ArrowRight, CheckCircle2, Phone, Mail, Instagram, Linkedin, Facebook, Youtube, MousePointer2, Zap, FlaskConical, ArrowUpRight } from 'lucide-react';
 
 interface HomeProps {
   onProjectSelect: (projectId: string) => void;
+  onNavToCaseStudies: () => void;
 }
 
-// Helper to render a bento grid item
-const BentoItem = ({ 
-  className = "", 
-  children, 
-  bgClass = "bg-gray-100",
-  onClick
-}: { 
-  className?: string, 
-  children?: React.ReactNode, 
-  bgClass?: string,
-  onClick?: () => void
-}) => (
-  <div 
-    onClick={onClick}
-    className={`relative overflow-hidden p-6 group transition-all duration-300 hover:shadow-lg ${bgClass} ${className} ${onClick ? 'cursor-pointer' : ''}`}
-  >
-    {children}
-  </div>
-);
 
 // SVG Components for the Methodology Section
 const IconAssess = () => (
   <svg viewBox="0 0 100 100" className="w-20 h-20 stroke-gray-800 fill-none stroke-[1.5]">
     <circle cx="50" cy="50" r="30" />
-    <circle cx="50" cy="50" r="15" className="stroke-blue-600" />
+    <circle cx="50" cy="50" r="15" className="stroke-brand-red" />
     <circle cx="71" cy="29" r="6" className="fill-white stroke-gray-800" />
   </svg>
 );
@@ -42,18 +26,18 @@ const IconPilot = () => (
     <circle cx="40" cy="50" r="25" className="opacity-20" />
     <circle cx="50" cy="50" r="25" className="opacity-40" />
     <circle cx="60" cy="50" r="25" className="opacity-60" />
-    <circle cx="70" cy="50" r="25" className="stroke-blue-600" />
+    <circle cx="70" cy="50" r="25" className="stroke-brand-red" />
   </svg>
 );
 
 const IconCoCreation = () => (
   <svg viewBox="0 0 100 100" className="w-20 h-20 stroke-gray-800 fill-none stroke-[1.5]">
-    <circle cx="50" cy="35" r="25" className="stroke-blue-600" />
+    <circle cx="50" cy="35" r="25" className="stroke-brand-red" />
     <circle cx="50" cy="65" r="25" />
   </svg>
 );
 
-export const Home: React.FC<HomeProps> = ({ onProjectSelect }) => {
+export const Home: React.FC<HomeProps> = ({ onProjectSelect, onNavToCaseStudies }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'brand' | 'celebrity' | 'movie'>('brand');
 
@@ -67,33 +51,36 @@ export const Home: React.FC<HomeProps> = ({ onProjectSelect }) => {
 
   return (
     <div className="min-h-screen bg-white font-sans text-brand-dark selection:bg-brand-red selection:text-white overflow-x-hidden">
-      
+
       {/* Navigation */}
-      <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+      <nav className="fixed w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm transition-all duration-300">
         <div className="container mx-auto px-6 h-24 flex items-center justify-between">
           <Logo />
-          
+
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
-            {NAV_ITEMS.map((item) => (
-              <button 
-                key={item.label}
-                onClick={() => scrollToSection(item.href)}
-                className="text-sm font-semibold text-gray-600 hover:text-brand-red transition-colors uppercase tracking-wide"
-              >
-                {item.label}
-              </button>
-            ))}
-            <button 
-              onClick={() => scrollToSection('#contact')}
-              className="bg-brand-dark text-white px-8 py-3 font-bold text-sm hover:bg-brand-red transition-colors duration-300 rounded-none"
+          <div className="hidden md:flex items-center gap-10">
+            <button
+              onClick={onNavToCaseStudies}
+              className="text-sm font-semibold text-gray-600 hover:text-brand-red transition-colors uppercase tracking-wide"
             >
-              Get Started
+              Case Studies
+            </button>
+            <button
+              onClick={() => scrollToSection('#services')}
+              className="text-sm font-semibold text-gray-600 hover:text-brand-red transition-colors uppercase tracking-wide"
+            >
+              Services
+            </button>
+            <button
+              onClick={() => scrollToSection('#contact')}
+              className="bg-brand-dark text-white px-8 py-3 font-bold text-sm hover:bg-brand-red transition-colors duration-300 rounded-none shadow-md hover:shadow-lg"
+            >
+              Get in touch
             </button>
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
+          <button
             className="md:hidden p-2 text-brand-dark"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
@@ -104,149 +91,64 @@ export const Home: React.FC<HomeProps> = ({ onProjectSelect }) => {
         {/* Mobile Nav Overlay */}
         {mobileMenuOpen && (
           <div className="md:hidden absolute top-24 left-0 w-full bg-white border-b border-gray-100 shadow-xl p-6 flex flex-col gap-4 animate-in slide-in-from-top-10">
-            {NAV_ITEMS.map((item) => (
-              <button 
-                key={item.label}
-                onClick={() => scrollToSection(item.href)}
-                className="text-left py-3 text-lg font-bold text-gray-800 border-b border-gray-50"
-              >
-                {item.label}
-              </button>
-            ))}
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onNavToCaseStudies();
+              }}
+              className="text-left py-3 text-lg font-bold text-gray-800 border-b border-gray-50"
+            >
+              Case Studies
+            </button>
+            <button
+              onClick={() => scrollToSection('#services')}
+              className="text-left py-3 text-lg font-bold text-gray-800 border-b border-gray-50"
+            >
+              Services
+            </button>
+            <button
+              onClick={() => scrollToSection('#contact')}
+              className="text-left py-3 text-lg font-bold text-brand-red"
+            >
+              Get in touch
+            </button>
           </div>
         )}
       </nav>
 
-      {/* Hero Section - Extended Bento Grid */}
-      <section className="pt-36 pb-20 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 aspect-[1/2] md:aspect-auto gap-1">
-            
-            {/* Item 1: Main Hero Message (2x2) */}
-            <BentoItem className="md:col-span-2 md:row-span-2 aspect-square flex flex-col justify-between bg-brand-red text-white">
-              <div className="flex justify-between items-start">
-                <Award className="w-10 h-10 text-white/90" />
-                <div className="flex gap-1">
-                   <span className="w-2 h-2 bg-white/40"></span>
-                   <span className="w-2 h-2 bg-white"></span>
-                   <span className="w-2 h-2 bg-white/40"></span>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <h1 className="text-4xl md:text-5xl font-black leading-tight">
-                  We are the <br/>Ideay-tors!
-                </h1>
-                <p className="text-white/80 font-medium max-w-sm">
-                  The Gladiator to your Rome & A Kaleidoscope of Ideas.
-                </p>
-              </div>
-            </BentoItem>
+      {/* Hero Section */}
+      <section className="pt-32 pb-16 md:pt-48 md:pb-24 bg-white relative overflow-hidden">
+        {/* Subtle Background Animation */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-[-20%] right-[10%] w-[600px] h-[600px] bg-brand-red/5 rounded-full blur-3xl animate-pulse delay-700"></div>
+          <div className="absolute bottom-[-10%] left-[20%] w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-3xl animate-pulse"></div>
+        </div>
 
-            {/* Item 2: Portfolio Item (1x1) */}
-            <BentoItem 
-              onClick={() => onProjectSelect('amazon')}
-              className="flex items-center justify-center group bg-gray-100 aspect-square"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 transition-transform duration-500 group-hover:scale-105"></div>
-              <div className="relative z-10 text-center">
-                <span className="block text-4xl font-black text-gray-400 group-hover:text-brand-dark transition-colors opacity-30 group-hover:opacity-100">AMAZON</span>
-                <span className="text-xs font-bold uppercase tracking-widest mt-2 block text-gray-500">Brand Work</span>
-              </div>
-            </BentoItem>
-
-            {/* Item 3: Portfolio Item (1x1) */}
-            <BentoItem 
-              onClick={() => onProjectSelect('spotify')}
-              className="flex items-center justify-center group bg-gray-50 aspect-square"
-            >
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-green-100 via-gray-100 to-gray-100 transition-transform duration-500 group-hover:scale-105"></div>
-              <div className="relative z-10 text-center">
-                <span className="block text-4xl font-black text-gray-400 group-hover:text-[#1DB954] transition-colors opacity-30 group-hover:opacity-100">Spotify</span>
-                <span className="text-xs font-bold uppercase tracking-widest mt-2 block text-gray-500">Campaign</span>
-              </div>
-            </BentoItem>
-
-            {/* Item 4: Service Highlight (1x1) */}
-            <BentoItem className="flex flex-col justify-between bg-gray-50 aspect-square">
-              <Zap className="w-8 h-8 text-brand-dark" />
-              <div>
-                <h3 className="text-xl font-bold mb-1">Growth Marketing</h3>
-                <p className="text-xs text-gray-500">Driving ROI with data.</p>
-              </div>
-            </BentoItem>
-
-            {/* Item 5: Portfolio Item (1x1) */}
-            <BentoItem 
-              onClick={() => onProjectSelect('baahubali')}
-              className="flex items-center justify-center group overflow-hidden bg-gray-100 aspect-square"
-            >
-               <div className="absolute inset-0 bg-brand-dark group-hover:bg-brand-red transition-colors duration-500"></div>
-               <div className="relative z-10 p-6 border-2 border-white/20 h-[80%] w-[80%] flex items-center justify-center">
-                 <span className="text-2xl font-serif text-white font-bold text-center leading-none">BAAHUBALI</span>
-               </div>
-            </BentoItem>
-
-            {/* Item 6: Portfolio Item (1x1) */}
-            <BentoItem 
-              className="flex items-center justify-center group bg-gray-50 aspect-square"
-            >
-              <div className="absolute inset-0 bg-gradient-to-bl from-blue-50 to-gray-100"></div>
-              <div className="relative z-10 text-center">
-                 <span className="block text-3xl font-black text-gray-400 group-hover:text-blue-600 transition-colors opacity-50 group-hover:opacity-100">Hotstar</span>
-                 <span className="text-xs font-bold uppercase tracking-widest mt-2 block text-gray-500">Digital</span>
-              </div>
-            </BentoItem>
-
-            {/* Item 7: Service Highlight (1x1) */}
-            <BentoItem className="flex flex-col justify-between bg-gray-100 aspect-square">
-              <MousePointer2 className="w-8 h-8 text-brand-dark" />
-              <div>
-                <h3 className="text-xl font-bold mb-1">Web Design</h3>
-                <p className="text-xs text-gray-500">UI/UX that converts.</p>
-              </div>
-            </BentoItem>
-
-            {/* Item 8: Secondary Message (2x2) */}
-            <BentoItem className="md:col-span-2 md:row-span-2 aspect-square flex flex-col justify-between bg-gray-50">
-              <FlaskConical className="w-10 h-10 text-brand-dark" />
-              <div className="space-y-4">
-                <h2 className="text-3xl md:text-4xl font-bold text-brand-dark leading-tight">
-                  Strategy driven, intellectually elegant.
-                </h2>
-                <p className="text-gray-500 max-w-sm">
-                  We blend visual power with technology to create human-to-human conversations.
-                </p>
-                <div className="flex gap-2 pt-4">
-                   <span className="w-2 h-2 bg-brand-dark"></span>
-                   <span className="w-2 h-2 bg-gray-300"></span>
-                   <span className="w-2 h-2 bg-gray-300"></span>
-                </div>
-              </div>
-            </BentoItem>
-
-             {/* Item 9: Portfolio Item (1x1) */}
-             <BentoItem 
-              onClick={() => onProjectSelect('gillette')}
-              className="flex items-center justify-center group bg-gray-900 aspect-square"
-            >
-              <div className="absolute inset-0 bg-gray-900 group-hover:bg-brand-red transition-colors duration-500"></div>
-               <span className="relative z-10 text-2xl font-bold text-white group-hover:scale-110 transition-transform">Gillette</span>
-            </BentoItem>
-
-            {/* Item 10: Call to Action (1x1) */}
-            <BentoItem className="flex flex-col justify-center items-center text-center cursor-pointer hover:bg-brand-dark hover:text-white transition-colors bg-gray-200 aspect-square">
-               <span className="text-lg font-bold mb-2">View All Work</span>
-               <ArrowRight className="w-6 h-6 animate-pulse" />
-            </BentoItem>
+        <div className="container mx-auto px-6 relative z-10 mb-20">
+          {/* Lead Hooking Text - Center Aligned */}
+          <div className="text-center mx-auto max-w-5xl">
+            <h1 className="text-6xl md:text-8xl font-black text-brand-dark leading-[1.1] tracking-tight mb-8">
+              We Scale <br />
+              <FlipWords />
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-500 font-medium max-w-3xl mx-auto leading-relaxed">
+              Data-driven growth strategies for India's most ambitious brands.
+              Strategy driven, intellectually elegant, visually powerful.
+            </p>
           </div>
+        </div>
+
+        {/* Brand Marquee */}
+        <div className="relative z-10 w-full border-y border-gray-100 bg-white/50 backdrop-blur-sm">
+          <BrandMarquee onProjectSelect={onProjectSelect} />
         </div>
       </section>
 
       {/* Methodology Section */}
-      <section className="py-24 bg-gray-50 border-t border-gray-100">
+      <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-6">
           <h2 className="text-5xl md:text-6xl font-bold text-brand-dark mb-20 max-w-2xl leading-tight">
-            The way we work <br/>
+            The way we work <br />
             is not an accident.
           </h2>
 
@@ -349,98 +251,97 @@ export const Home: React.FC<HomeProps> = ({ onProjectSelect }) => {
       {/* NEW: Work Section (Case Studies) */}
       <section id="work" className="py-24 bg-white border-t border-gray-100">
         <div className="container mx-auto px-6">
-           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
-              <div className="max-w-xl">
-                 <h2 className="text-brand-red font-bold tracking-widest uppercase mb-4 text-sm">Selected Work</h2>
-                 <h3 className="text-5xl md:text-6xl font-black text-brand-dark leading-tight">
-                    Crafting Digital <br/> Experiences.
-                 </h3>
-              </div>
-              <div className="md:text-right hidden md:block">
-                 <p className="text-gray-500 font-medium text-lg">We build brands that matter.</p>
-              </div>
-           </div>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+            <div className="max-w-xl">
+              <h2 className="text-brand-red font-bold tracking-widest uppercase mb-4 text-sm">Selected Work</h2>
+              <h3 className="text-5xl md:text-6xl font-black text-brand-dark leading-tight">
+                Crafting Digital <br /> Experiences.
+              </h3>
+            </div>
+            <div className="md:text-right hidden md:block">
+              <p className="text-gray-500 font-medium text-lg">We build brands that matter.</p>
+            </div>
+          </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
-              {PROJECTS.map((project, idx) => (
-                 <div 
-                    key={project.id} 
-                    className="group cursor-pointer"
-                    onClick={() => onProjectSelect(project.id)}
-                 >
-                    {/* Image Container */}
-                    <div className="overflow-hidden mb-6 aspect-[4/3] relative bg-gray-100">
-                       <div className={`w-full h-full ${project.images[0]} transition-transform duration-700 ease-out group-hover:scale-105`}></div>
-                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
-                       
-                       {/* Overlay Arrow */}
-                       <div className="absolute bottom-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="w-12 h-12 bg-white flex items-center justify-center text-brand-dark shadow-xl">
-                             <ArrowUpRight size={24} />
-                          </div>
-                       </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
+            {PROJECTS.map((project, idx) => (
+              <div
+                key={project.id}
+                className="group cursor-pointer"
+                onClick={() => onProjectSelect(project.id)}
+              >
+                {/* Image Container */}
+                <div className="overflow-hidden mb-6 aspect-[4/3] relative bg-gray-100">
+                  <div className={`w-full h-full ${project.images[0]} transition-transform duration-700 ease-out group-hover:scale-105`}></div>
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
+
+                  {/* Overlay Arrow */}
+                  <div className="absolute bottom-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-12 h-12 bg-white flex items-center justify-center text-brand-dark shadow-xl">
+                      <ArrowUpRight size={24} />
                     </div>
-                    
-                    {/* Text Content */}
-                    <div className="flex justify-between items-start border-b border-transparent group-hover:border-gray-200 pb-4 transition-colors">
-                       <div>
-                          <h4 className="text-3xl font-bold text-brand-dark mb-2 group-hover:text-brand-red transition-colors">
-                             {project.title}
-                          </h4>
-                          <p className="text-gray-500 text-lg">{project.subtitle}</p>
-                       </div>
-                       <span className="text-xs font-bold uppercase tracking-widest text-gray-400 mt-2 bg-gray-50 px-2 py-1">
-                          {project.category}
-                       </span>
-                    </div>
-                 </div>
-              ))}
-           </div>
+                  </div>
+                </div>
+
+                {/* Text Content */}
+                <div className="flex justify-between items-start border-b border-transparent group-hover:border-gray-200 pb-4 transition-colors">
+                  <div>
+                    <h4 className="text-3xl font-bold text-brand-dark mb-2 group-hover:text-brand-red transition-colors">
+                      {project.title}
+                    </h4>
+                    <p className="text-gray-500 text-lg">{project.subtitle}</p>
+                  </div>
+                  <span className="text-xs font-bold uppercase tracking-widest text-gray-400 mt-2 bg-gray-50 px-2 py-1">
+                    {project.category}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* NEW: Clients Section */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-6">
-           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div>
               <h3 className="text-3xl font-black text-brand-dark">Whom We've Worked With</h3>
             </div>
-            
+
             <div className="flex gap-2 bg-white p-1 border border-gray-200">
               {(['brand', 'celebrity', 'movie'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-6 py-2 text-sm font-bold uppercase transition-all ${
-                    activeTab === tab 
-                      ? 'bg-brand-red text-white' 
-                      : 'text-gray-500 hover:text-gray-900'
-                  }`}
+                  className={`px-6 py-2 text-sm font-bold uppercase transition-all ${activeTab === tab
+                    ? 'bg-brand-red text-white'
+                    : 'text-gray-500 hover:text-gray-900'
+                    }`}
                 >
                   {tab}s
                 </button>
               ))}
             </div>
-           </div>
+          </div>
 
-           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-0 border-t border-l border-gray-200 bg-white">
-             {CLIENTS.filter(c => c.category === activeTab).map((client, idx) => (
-               <div 
-                  key={idx} 
-                  className="aspect-square border-r border-b border-gray-200 flex items-center justify-center p-4 hover:bg-gray-50 transition-colors group relative"
-                >
-                  <span className="font-bold text-gray-400 text-center group-hover:text-brand-dark transition-colors duration-300">
-                    {client.name}
-                  </span>
-               </div>
-             ))}
-             
-             {/* "And Many More" Placeholder */}
-             <div className="aspect-square border-r border-b border-gray-200 bg-brand-dark text-white flex items-center justify-center p-4">
-               <span className="font-bold text-center text-sm">and many more...</span>
-             </div>
-           </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-0 border-t border-l border-gray-200 bg-white">
+            {CLIENTS.filter(c => c.category === activeTab).map((client, idx) => (
+              <div
+                key={idx}
+                className="aspect-square border-r border-b border-gray-200 flex items-center justify-center p-4 hover:bg-gray-50 transition-colors group relative"
+              >
+                <span className="font-bold text-gray-400 text-center group-hover:text-brand-dark transition-colors duration-300">
+                  {client.name}
+                </span>
+              </div>
+            ))}
+
+            {/* "And Many More" Placeholder */}
+            <div className="aspect-square border-r border-b border-gray-200 bg-brand-dark text-white flex items-center justify-center p-4">
+              <span className="font-bold text-center text-sm">and many more...</span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -450,7 +351,7 @@ export const Home: React.FC<HomeProps> = ({ onProjectSelect }) => {
           <div className="flex flex-col md:flex-row gap-16 items-center">
             <div className="md:w-1/2">
               <h2 className="text-6xl md:text-7xl font-black mb-8 text-brand-dark">
-                REACH OUT <br/> TO <span className="text-brand-red">US</span>
+                REACH OUT <br /> TO <span className="text-brand-red">US</span>
               </h2>
               <div className="space-y-6 text-lg">
                 <a href="mailto:hello@ideaye.co" className="flex items-center gap-4 text-gray-600 hover:text-brand-red transition-colors">
